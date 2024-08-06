@@ -939,4 +939,19 @@ void qemu_plugin_u64_set(qemu_plugin_u64 entry, unsigned int vcpu_index,
 QEMU_PLUGIN_API
 uint64_t qemu_plugin_u64_sum(qemu_plugin_u64 entry);
 
+/**
+ * qemu_plugin_exit_current_tb() - exit the currently running tb
+ */
+QEMU_PLUGIN_API
+void qemu_plugin_exit_current_tb(void);
+
+
+/**
+ * qemu_plugin_savevm() - create a snapshot of the whole virtual machine
+ *
+ * @tag: snapshot identifier
+ */
+QEMU_PLUGIN_API
+void qemu_plugin_savevm(const char *tag);
+
 #endif /* QEMU_QEMU_PLUGIN_H */

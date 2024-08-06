@@ -55,5 +55,6 @@
   qemu_plugin_update_ns;
   qemu_plugin_vcpu_for_each;
   qemu_plugin_exit_current_tb;
+  qemu_plugin_set_pc;
   qemu_plugin_savevm;
 };

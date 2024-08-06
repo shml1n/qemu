@@ -630,6 +630,22 @@ void qemu_plugin_update_ns(const void *handle, int64_t new_time)
 #endif
 }
 
+void qemu_plugin_set_pc(uint64_t pc)
+{
+    CPUClass *cc = CPU_GET_CLASS(current_cpu);
+
+#if defined(TARGET_ARM) || defined(TARGET_AARCH64)
+    ARMCPU *cpu = ARM_CPU(current_cpu);
+    CPUARMState *env = &cpu->env;
+
+    if (env->thumb) {
+        pc |= 1;
+    }
+#endif
+
+    cc->set_pc(current_cpu,  pc);
+}
+
 void qemu_plugin_exit_current_tb(void)
 {
     cpu_loop_exit(current_cpu);

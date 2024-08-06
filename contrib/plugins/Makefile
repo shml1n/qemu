@@ -29,6 +29,7 @@ NAMES += cache
 NAMES += drcov
 NAMES += ips
 NAMES += stoptrigger
+NAMES += skipinsn
 NAMES += savevmafter
 
 ifeq ($(CONFIG_WIN32),y)

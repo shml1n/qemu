@@ -945,6 +945,13 @@ uint64_t qemu_plugin_u64_sum(qemu_plugin_u64 entry);
 QEMU_PLUGIN_API
 void qemu_plugin_exit_current_tb(void);
 
+/**
+ * qemu_plugin_set_pc() - update current cpu state pc
+ * @pc: new program counter to set
+ */
+QEMU_PLUGIN_API
+void qemu_plugin_set_pc(uint64_t pc);
+
 
 /**
  * qemu_plugin_savevm() - create a snapshot of the whole virtual machine

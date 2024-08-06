@@ -54,6 +54,7 @@
 #include "qemu/plugin-memory.h"
 #include "hw/boards.h"
 #include "migration/snapshot.h"
+#include "sysemu/runstate.h"
 #else
 #include "qemu.h"
 #ifdef CONFIG_LINUX
@@ -674,5 +675,20 @@ void qemu_plugin_savevm(const char *tag) {
 
     if (err != NULL) {
         error_reportf_err(err, " savevm error !\n");
+    }
+}
+
+void qemu_plugin_loadvm(const char *tag) {
+    Error *err = NULL;
+
+    runstate_set(RUN_STATE_RESTORE_VM);
+
+    bql_lock();
+    load_snapshot(tag, NULL, false, NULL, &err);
+    runstate_set(RUN_STATE_RUNNING);
+    bql_unlock();
+
+    if (err != NULL) {
+        error_reportf_err(err, " loadvm error !\n");
     }
 }

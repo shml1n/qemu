@@ -59,4 +59,5 @@
   qemu_plugin_insn_disas_written_regs;
   qemu_plugin_write_register;
   qemu_plugin_savevm;
+  qemu_plugin_loadvm;
 };

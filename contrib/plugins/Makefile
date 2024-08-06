@@ -32,6 +32,7 @@ NAMES += stoptrigger
 NAMES += skipinsn
 NAMES += stuckat
 NAMES += savevmafter
+NAMES += finalfaultmtt
 
 ifeq ($(CONFIG_WIN32),y)
 SO_SUFFIX := .dll

@@ -984,4 +984,11 @@ int qemu_plugin_write_register(struct qemu_plugin_register *handle, uint8_t *mem
 QEMU_PLUGIN_API
 void qemu_plugin_savevm(const char *tag);
 
+/**
+ * qemu_plugin_loadvm() - set the whole virtual machine to the snapshot identified by the tag.
+ *
+ * @tag: snapshot identifier
+ */
+QEMU_PLUGIN_API
+void qemu_plugin_loadvm(const char *tag);
 #endif /* QEMU_QEMU_PLUGIN_H */

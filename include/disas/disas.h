@@ -13,6 +13,9 @@ void monitor_disas(Monitor *mon, CPUState *cpu, uint64_t pc,
 #ifdef CONFIG_PLUGIN
 char *plugin_disas(CPUState *cpu, const DisasContextBase *db,
                    uint64_t addr, size_t size);
+
+GPtrArray *plugin_disas_written_regs(CPUState *cpu, const DisasContextBase *db,
+                   uint64_t addr, size_t size);
 #endif
 
 /* Look up symbol for debugging purpose.  Returns "" if unknown. */

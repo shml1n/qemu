@@ -311,6 +311,9 @@ typedef struct disassemble_info {
   /* Number of symbols in array.  */
   int num_symbols;
 
+  /* An array of pointers to written regs name */
+  GPtrArray *written_regs;
+
   /* For use by the disassembler.
      The top 16 bits are reserved for public use (and are documented here).
      The bottom 16 bits are for the internal use of the disassembler.  */
@@ -353,6 +356,10 @@ typedef struct disassemble_info {
      that address), but sometimes we want to mask out the overlay bits.  */
   int (* symbol_at_address_func)
     (bfd_vma addr, struct disassemble_info * info);
+
+  /* Function called to add written reg to the written_regs array */
+  void (*add_written_reg_func)
+    (const char *reg_name, struct disassemble_info * info);
 
   /* These are for buffer_read_memory.  */
   const bfd_byte *buffer;
@@ -465,6 +472,7 @@ bool cap_disas_target(disassemble_info *info, uint64_t pc, size_t size);
 bool cap_disas_host(disassemble_info *info, const void *code, size_t size);
 bool cap_disas_monitor(disassemble_info *info, uint64_t pc, int count);
 bool cap_disas_plugin(disassemble_info *info, uint64_t pc, size_t size);
+bool cap_disas_plugin_written_regs(disassemble_info *info, uint64_t pc, size_t size);
 #else
 # define cap_disas_target(i, p, s)  false
 # define cap_disas_host(i, p, s)    false

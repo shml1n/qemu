@@ -952,6 +952,29 @@ void qemu_plugin_exit_current_tb(void);
 QEMU_PLUGIN_API
 void qemu_plugin_set_pc(uint64_t pc);
 
+/**
+ * qemu_plugin_insn_disas_written_regs() - return the names of written registers by the given insn
+ * @insn: instruction reference
+ *
+ * Returns an array containing the names of written registers by the given insn
+ */
+QEMU_PLUGIN_API
+GPtrArray *qemu_plugin_insn_disas_written_regs(const struct qemu_plugin_insn *insn);
+
+/**
+ * qemu_plugin_write_register() - write register for current vCPU
+ *
+ * @handle: a @qemu_plugin_reg_handle handle
+ * @mem_buf: A uint8_t byte array that will be written to the register
+ *
+ * This function is only available in a context that register read access is
+ * explicitly requested via the QEMU_PLUGIN_CB_RW_REGS flag.
+ *
+ * Returns the size of the written register. The content of @mem_buf is in target byte
+ * order. On failure returns -1.
+ */
+QEMU_PLUGIN_API
+int qemu_plugin_write_register(struct qemu_plugin_register *handle, uint8_t *mem_buf);
 
 /**
  * qemu_plugin_savevm() - create a snapshot of the whole virtual machine

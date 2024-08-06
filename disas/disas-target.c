@@ -65,6 +65,11 @@ static void plugin_print_address(bfd_vma addr, struct disassemble_info *info)
     /* does nothing */
 }
 
+static void plugin_add_written_reg(const char *reg_name, struct disassemble_info *info)
+{
+    g_ptr_array_add(info->written_regs, (gpointer)reg_name);
+}
+
 /*
  * We should only be dissembling one instruction at a time here. If
  * there is left over it usually indicates the front end has read more
@@ -95,5 +100,29 @@ char *plugin_disas(CPUState *cpu, const DisasContextBase *db,
 
     /* Return the buffer, freeing the GString container.  */
     return g_string_free(ds, false);
+}
+
+GPtrArray *plugin_disas_written_regs(CPUState *cpu, const DisasContextBase *db,
+                   uint64_t addr, size_t size)
+{
+    CPUDebug s;
+
+    disas_initialize_debug_target(&s, cpu);
+    s.info.read_memory_func = translator_read_memory;
+    s.info.application_data = (void *)db;
+    s.info.buffer_vma = addr;
+    s.info.buffer_length = size;
+    s.info.print_address_func = plugin_print_address;
+    s.info.add_written_reg_func = plugin_add_written_reg;
+    s.info.written_regs = g_ptr_array_new();
+
+    if (s.info.cap_arch >= 0 && cap_disas_plugin_written_regs(&s.info, addr, size)) {
+        ; /* done */
+    } else {
+        ; /* cannot disassemble -- return empty string */
+    }
+
+    /* Return the buffer, freeing the GString container.  */
+    return s.info.written_regs;
 }
 #endif /* CONFIG_PLUGIN */

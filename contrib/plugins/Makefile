@@ -30,6 +30,7 @@ NAMES += drcov
 NAMES += ips
 NAMES += stoptrigger
 NAMES += skipinsn
+NAMES += stuckat
 NAMES += savevmafter
 
 ifeq ($(CONFIG_WIN32),y)

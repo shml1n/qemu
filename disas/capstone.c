@@ -75,6 +75,9 @@ static cs_err cap_disas_start(disassemble_info *info, csh *handle)
     /* "Disassemble" unknown insns as ".byte W,X,Y,Z".  */
     cs_option(*handle, CS_OPT_SKIPDATA, CS_OPT_ON);
 
+    /* Enable detail feature */
+    cs_option(*handle, CS_OPT_DETAIL, CS_OPT_ON);
+
     switch (info->cap_arch) {
     case CS_ARCH_SYSZ:
         cs_option(*handle, CS_OPT_SKIPDATA_SETUP,
@@ -332,6 +335,40 @@ bool cap_disas_plugin(disassemble_info *info, uint64_t pc, size_t size)
     if (cs_disasm_iter(handle, &cbuf, &size, &pc, cap_insn)) {
         info->fprintf_func(info->stream, "%s %s",
                            cap_insn->mnemonic, cap_insn->op_str);
+    }
+
+    cs_close(&handle);
+    return true;
+}
+
+bool cap_disas_plugin_written_regs(disassemble_info *info, uint64_t pc,
+                                   size_t size)
+{
+    uint8_t cap_buf[32];
+    const uint8_t *cbuf = cap_buf;
+    csh handle;
+    cs_regs read_regs, written_regs;
+    uint8_t read_regs_count, written_regs_count;
+
+    if (cap_disas_start(info, &handle) != CS_ERR_OK) {
+        return false;
+    }
+
+    assert(size < sizeof(cap_buf));
+    info->read_memory_func(pc, cap_buf, size, info);
+
+    if (cs_disasm_iter(handle, &cbuf, &size, &pc, cap_insn)) {
+        if (cs_regs_access(handle, cap_insn, read_regs, &read_regs_count, written_regs,
+                           &written_regs_count) != CS_ERR_OK) {
+            return false;
+        }
+
+        if (written_regs_count > 0) {
+            for (int n = 0; n < written_regs_count; n++) {
+                info->add_written_reg_func(cs_reg_name(handle, written_regs[n]),
+                                           info);
+            }
+        }
     }
 
     cs_close(&handle);

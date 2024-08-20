@@ -33,6 +33,7 @@ NAMES += skipinsn
 NAMES += stuckat
 NAMES += savevmafter
 NAMES += finalfaultmtt
+NAMES += countinstructions
 
 ifeq ($(CONFIG_WIN32),y)
 SO_SUFFIX := .dll

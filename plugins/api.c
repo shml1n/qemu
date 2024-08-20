@@ -666,6 +666,7 @@ void qemu_plugin_exit_current_tb(void)
     cpu_loop_exit(current_cpu);
 }
 
+#ifndef CONFIG_USER_ONLY
 void qemu_plugin_savevm(const char *tag) {
     Error *err = NULL;
 
@@ -692,3 +693,4 @@ void qemu_plugin_loadvm(const char *tag) {
         error_reportf_err(err, " loadvm error !\n");
     }
 }
+#endif
